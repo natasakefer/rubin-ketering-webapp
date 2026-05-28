@@ -1,6 +1,89 @@
-main {
+:root {
+  --rk-primary: #50091b;
+  --rk-primary-dark: #350512;
+  --rk-pink: #ffd4e6;
+  --rk-cream: #fffde8;
+  --rk-text: #251117;
+  --rk-muted: #75666b;
+  --rk-border: rgba(80, 9, 27, 0.12);
+  --rk-surface: #ffffff;
+  --rk-shadow: 0 14px 35px rgba(80, 9, 27, 0.08);
+}
+
+body {
+  background: linear-gradient(180deg, var(--rk-cream) 0%, #fff 42%);
+  color: var(--rk-text);
+}
+
+a {
+  color: var(--rk-primary);
+}
+
+a:hover {
+  color: var(--rk-primary-dark);
+}
+
+main,
+.app-main {
   min-height: 80vh;
-  user-select: none;
+}
+
+.app-main {
+  padding: 1.25rem 0 2.5rem;
+}
+
+.app-header.navbar {
+  background-color: var(--rk-primary);
+  box-shadow: 0 10px 30px rgba(80, 9, 27, 0.14);
+}
+
+.app-brand {
+  letter-spacing: 0;
+}
+
+.app-footer {
+  color: var(--rk-muted);
+}
+
+.app-footer p {
+  margin-bottom: 0;
+}
+
+.btn-primary,
+.add-to-cart-btn {
+  background-color: var(--rk-primary);
+  border-color: var(--rk-primary);
+  color: #fff;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.add-to-cart-btn:hover,
+.add-to-cart-btn:focus {
+  background-color: var(--rk-primary-dark);
+  border-color: var(--rk-primary-dark);
+  color: #fff;
+}
+
+.btn-primary:disabled,
+.add-to-cart-btn:disabled {
+  background-color: #a98691;
+  border-color: #a98691;
+}
+
+.badge.bg-success {
+  background-color: var(--rk-pink) !important;
+  color: var(--rk-primary);
+}
+
+.card,
+.list-group-item,
+.form-control {
+  border-color: var(--rk-border);
+}
+
+.card {
+  box-shadow: var(--rk-shadow);
 }
 
 .rating span {
@@ -8,7 +91,7 @@ main {
 }
 
 .rating svg {
-  color: #E6CD69;
+  color: #e6cd69;
 }
 
 .rating-text {
@@ -18,13 +101,12 @@ main {
 }
 
 .product-title {
-  height: 2.5em; /* Set a fixed height */
-  overflow: hidden; /* Hide overflow content */
-  text-overflow: ellipsis; /* Add ellipsis for long text */
-  white-space: nowrap; /* Prevent wrapping */
-
+  height: 2.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 1.1rem;
-  color: #222;
+  color: var(--rk-text);
   text-decoration: none;
 }
 
@@ -55,21 +137,4 @@ table th {
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
-}
-
-.add-to-cart-btn {
-  background-color: #30848e;
-  border-color: #30848e;
-  color: white;
-}
-
-.add-to-cart-btn:hover {
-  background-color: #256a72;
-  border-color: #256a72;
-  color: white;
-}
-
-.add-to-cart-btn:disabled {
-  background-color: #9aaeb1;
-  border-color: #9aaeb1;
 }

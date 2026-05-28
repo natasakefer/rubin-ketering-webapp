@@ -9,17 +9,14 @@ import 'react-toastify/dist/ReactToastify.css'
 const App = () => {
   return (
     <>
-    <Header/>
-    <main className='py-3'>
-    <Container>
-      <Outlet/>
-    <h1>
-      Dobro dosli u Skriptarnicu FTN!
-    </h1>
-    </Container>
-    </main>
-    <Footer/>
-    <ToastContainer />
+      <Header />
+      <main className='app-main'>
+        <Container>
+          <Outlet />
+        </Container>
+      </main>
+      <Footer />
+      <ToastContainer />
     </>
   )
 }

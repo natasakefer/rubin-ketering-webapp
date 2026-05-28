@@ -2,12 +2,11 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom' 
 import { Link } from 'react-router-dom'
-import { Form, Row, Col, Image, ListGroup, Card, Button, Badge } from 'react-bootstrap'
+import { Form, Row, Col, Image, Card, Button, Badge } from 'react-bootstrap'
 import { useGetProductDetailsQuery } from '../slices/productApiSlice' 
 import Rating from '../components/Rating'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux' 
 import { addToCart } from '../slices/cartSlice'
 
