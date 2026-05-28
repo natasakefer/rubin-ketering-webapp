@@ -1,5 +1,5 @@
 import React from 'react'
-import logo from '../assets/logo.png'
+import logo from '../assets/LOGO1.png'
 import { FaShoppingCart, FaUser } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { Badge, Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
@@ -41,11 +41,8 @@ const Header = () => {
               <img
                 src={logo}
                 alt='Rubin Ketering'
-                width='30'
-                height='30'
-                className='d-inline-block align-top me-2'
+                className='app-brand__logo'
               />
-              <span className='fw-semibold'>Rubin Ketering</span>
             </Navbar.Brand>
           </LinkContainer>
 
@@ -53,6 +50,10 @@ const Header = () => {
 
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='ms-auto'>
+              <LinkContainer to='/products'>
+                <Nav.Link>Cenovnik</Nav.Link>
+              </LinkContainer>
+
               <LinkContainer to='/cart'>
                 <Nav.Link>
                   <FaShoppingCart /> Korpa
