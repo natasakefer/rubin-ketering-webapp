@@ -24,7 +24,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
                 const result = await baseQuery({ url: `${PRODUCT_URL}/${productId}` });
 
                 if (result.error && shouldUseFallbackProducts()) {
-                    const product = fallbackProducts.find((item) => item._id === productId);
+                    const product = fallbackProducts.find((item) => String(item._id) === String(productId));
 
                     return product
                         ? { data: product }

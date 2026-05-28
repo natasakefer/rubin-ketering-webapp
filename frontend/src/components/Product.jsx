@@ -27,6 +27,7 @@ const formatPrice = (price) =>
 
 const Product = ({product}) => {
   const dispatch = useDispatch()
+  const productId = product._id || product.id
   const unit = getProductUnit(product)
   const isAvailable = product.countInStock > 0
 
@@ -36,14 +37,14 @@ const Product = ({product}) => {
 
   return (
     <Card className='product-card'>
-      <Link to={`/product/${product._id}`} className='product-card__image-link'>
+      <Link to={`/product/${productId}`} className='product-card__image-link'>
         <Card.Img src={product.image} alt={product.name} />
       </Link>
 
       <Card.Body className='product-card__body'>
         <div>
           <span className='product-card__category'>{product.category}</span>
-          <Link to={`/product/${product._id}`} className='product-card__title'>
+          <Link to={`/product/${productId}`} className='product-card__title'>
             {product.name}
           </Link>
         </div>

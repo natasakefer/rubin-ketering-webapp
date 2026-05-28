@@ -1,156 +1,139 @@
-
 import { useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom' 
-import { Link } from 'react-router-dom'
-import { Form, Row, Col, Image, Card, Button, Badge } from 'react-bootstrap'
-import { useGetProductDetailsQuery } from '../slices/productApiSlice' 
+import { useParams, useNavigate, Link } from 'react-router-dom'
+import { Form, Row, Col, Image, Button } from 'react-bootstrap'
+import { useDispatch } from 'react-redux'
+import { useGetProductDetailsQuery } from '../slices/productApiSlice'
 import Rating from '../components/Rating'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-import { useDispatch } from 'react-redux' 
 import { addToCart } from '../slices/cartSlice'
 
+const getProductUnit = (product) => {
+  if (product?.unit) {
+    return product.unit
+  }
+
+  const text = `${product?.category || ''} ${product?.name || ''}`.toLowerCase()
+
+  if (text.includes('paket') || text.includes('box') || text.includes('tanjir')) {
+    return 'kom'
+  }
+
+  return 'kg'
+}
+
+const formatPrice = (price) =>
+  new Intl.NumberFormat('sr-RS', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(price || 0)
 
 const ProductScreen = () => {
-  const { id: productId } = useParams();
-  const [qty, setQty] = useState(1);
+  const { id: productId } = useParams()
+  const [qty, setQty] = useState(1)
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const {
     data: product,
     isLoading,
     error,
-  } = useGetProductDetailsQuery(productId);
+  } = useGetProductDetailsQuery(productId)
 
   const addToCartHandler = () => {
-    dispatch(addToCart({ ...product, qty }));
-    navigate('/cart');
-  };
+    dispatch(addToCart({ ...product, qty }))
+    navigate('/cart')
+  }
+
+  if (isLoading) {
+    return <Loader />
+  }
+
+  if (error) {
+    return (
+      <Message variant='danger'>
+        {error?.data?.message || error.error}
+      </Message>
+    )
+  }
+
+  const unit = getProductUnit(product)
+  const isAvailable = product.countInStock > 0
 
   return (
-    <>
-      <Link className='btn btn-outline-secondary mb-4' to='/'>
-        ← Nazad
+    <div className='product-detail'>
+      <Link className='product-detail__back' to='/products'>
+        Nazad na cenovnik
       </Link>
 
-      {isLoading ? (
-        <Loader />
-      ) : error ? (
-        <Message variant='danger'>
-          {error?.data?.message || error.error}
-        </Message>
-      ) : (
-        <>
-          <Card className='border-0 shadow-sm p-4 mb-4'>
-            <Row className='align-items-center'>
-              <Col md={8}>
-                <h2 className='mb-2'>{product.name}</h2>
+      <Row className='g-4 align-items-stretch'>
+        <Col lg={7}>
+          <div className='product-detail__media'>
+            <Image src={product.image} alt={product.name} fluid />
+          </div>
+        </Col>
 
-                <Rating
-                  value={product.rating}
-                  text={`${product.numReviews} recenzija`}
-                />
-              </Col>
+        <Col lg={5}>
+          <section className='product-detail__panel'>
+            <span className='product-detail__category'>{product.category}</span>
+            <h1>{product.name}</h1>
 
-              <Col md={4} className='text-md-end mt-3 mt-md-0'>
-                <h3 className='text-primary mb-0'>
-                  {product?.price?.toFixed(2)} RSD
-                </h3>
-              </Col>
-            </Row>
-          </Card>
+            <Rating
+              value={product.rating}
+              text={`${product.numReviews} ocena`}
+            />
 
-          <Row className='gy-4'>
-            <Col lg={8}>
-              <Card className='border-0 shadow-sm p-4'>
-                <div className='text-center'>
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fluid
-                    style={{
-                      maxHeight: '500px',
-                      objectFit: 'contain',
-                    }}
-                  />
-                </div>
-              </Card>
-            </Col>
+            <p className='product-detail__description'>
+              {product.description}
+            </p>
 
-            <Col lg={4}>
-              <Card className='border-0 shadow-sm'>
-                <Card.Body>
-                  <h4 className='mb-4'>Informacije o proizvodu</h4>
+            <div className='product-detail__price-row'>
+              <div>
+                <span>Cena</span>
+                <strong>{formatPrice(product.price)} RSD</strong>
+                <small>/{unit}</small>
+              </div>
 
-                  <div className='d-flex justify-content-between mb-3'>
-                    <span>Kategorija:</span>
-                    <span>{product.category}</span>
-                  </div>
+              {isAvailable ? (
+                <span className='product-detail__badge'>Dostupno</span>
+              ) : (
+                <span className='product-detail__badge product-detail__badge--muted'>
+                  Nije dostupno
+                </span>
+              )}
+            </div>
 
-                  <div className='d-flex justify-content-between align-items-center mb-4'>
-                    <span>Status:</span>
+            {isAvailable && (
+              <div className='product-detail__qty'>
+                <Form.Label>Kolicina</Form.Label>
+                <Form.Control
+                  as='select'
+                  value={qty}
+                  onChange={(e) => setQty(Number(e.target.value))}
+                >
+                  {[...Array(product.countInStock).keys()].map((x) => (
+                    <option key={x + 1} value={x + 1}>
+                      {x + 1}
+                    </option>
+                  ))}
+                </Form.Control>
+              </div>
+            )}
 
-                    {product.countInStock > 0 ? (
-                      <Badge bg='success'>Dostupno</Badge>
-                    ) : (
-                      <Badge bg='danger'>Nije dostupno</Badge>
-                    )}
-                  </div>
+            <Button
+              className='add-to-cart-btn product-detail__cta'
+              type='button'
+              disabled={!isAvailable}
+              onClick={addToCartHandler}
+            >
+              Dodaj u korpu
+            </Button>
+          </section>
+        </Col>
+      </Row>
+    </div>
+  )
+}
 
-                  {product.countInStock > 0 && (
-                    <div className='d-flex justify-content-between align-items-center mb-4'>
-                      <span>Količina:</span>
-
-                      <Form.Control
-                        as='select'
-                        value={qty}
-                        onChange={(e) =>
-                          setQty(Number(e.target.value))
-                        }
-                        style={{
-                          width: '90px',
-                          textAlign: 'center',
-                        }}
-                      >
-                        {[...Array(product.countInStock).keys()].map((x) => (
-                          <option key={x + 1} value={x + 1}>
-                            {x + 1}
-                          </option>
-                        ))}
-                      </Form.Control>
-                    </div>
-                  )}
-
-                  <div className='d-grid'>
-                    <Button
-                      className='add-to-cart-btn'
-                      type='button'
-                      disabled={product.countInStock === 0}
-                      onClick={addToCartHandler}
-                    >
-                      Dodaj u korpu
-                    </Button>
-                  </div>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-
-          <Card className='border-0 shadow-sm mt-4'>
-            <Card.Body>
-              <h4 className='mb-3'>Opis proizvoda</h4>
-
-              <p className='text-muted mb-0'>
-                {product.description}
-              </p>
-            </Card.Body>
-          </Card>
-        </>
-      )}
-    </>
-  );
-};
-
-export default ProductScreen;
+export default ProductScreen

@@ -8,48 +8,32 @@ import CatalogShowcase from '../components/CatalogShowcase'
 import { useGetProductsQuery } from '../slices/productApiSlice'
 import catalogProducts from '../products_list'
 
+const normalizeCategory = (value = '') => value.trim().toLowerCase()
+
+const getProductKey = (product) => product._id || product.id
+
 const sectionConfig = [
   {
     title: 'Slano',
     eyebrow: 'Slani program',
     description:
       'Mini pice, burgeri, hot dog zalogaji, pite i kiflice u urednom ketering izdanju.',
-    match: (product) => {
-      const text = `${product.category} ${product.name}`.toLowerCase()
-      return (
-        text.includes('slano') ||
-        text.includes('slan') ||
-        text.includes('pice') ||
-        text.includes('burger') ||
-        text.includes('hot dog') ||
-        text.includes('pita') ||
-        text.includes('kiflice')
-      )
-    },
+    categories: ['slano'],
   },
   {
     title: 'Dezerti',
     eyebrow: 'Slatki program',
     description:
       'Krofnice, kolaci, rolat, bajadera, mafini i kremasti deserti za slatki sto.',
-    match: (product) => {
-      const text = `${product.category} ${product.name}`.toLowerCase()
-      return (
-        text.includes('dezert') ||
-        text.includes('slatk') ||
-        text.includes('kolac') ||
-        text.includes('krofnice') ||
-        text.includes('rolat') ||
-        text.includes('bajadera') ||
-        text.includes('mafini') ||
-        text.includes('sladoled')
-      )
-    },
+    categories: ['dezerti', 'slatko'],
   },
 ]
 
 const CatalogSection = ({ config, products }) => {
-  const sectionProducts = products.filter(config.match)
+  const sectionProducts = products.filter((product) =>
+    config.categories.includes(normalizeCategory(product.category))
+  )
+  const showcaseProducts = sectionProducts.filter((product) => product.showcase)
 
   return (
     <section className='catalog-section'>
@@ -61,12 +45,12 @@ const CatalogSection = ({ config, products }) => {
         </div>
       </div>
 
-      <CatalogShowcase products={sectionProducts} />
+      <CatalogShowcase products={showcaseProducts} />
 
       {sectionProducts.length > 0 ? (
         <Row className='g-4'>
           {sectionProducts.map((product) => (
-            <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+            <Col key={getProductKey(product)} sm={12} md={6} lg={4} xl={3}>
               <Product product={product} />
             </Col>
           ))}
@@ -79,8 +63,7 @@ const CatalogSection = ({ config, products }) => {
 }
 
 const HomeScreen = () => {
-  const { data: products = [], isLoading, error } = useGetProductsQuery()
-  const displayProducts = products.length >= catalogProducts.length ? products : catalogProducts
+  const { isLoading, error } = useGetProductsQuery()
 
   return (
     <div className='catalog-page'>
@@ -95,7 +78,7 @@ const HomeScreen = () => {
           <CatalogSection
             key={config.title}
             config={config}
-            products={displayProducts}
+            products={catalogProducts}
           />
         ))
       )}

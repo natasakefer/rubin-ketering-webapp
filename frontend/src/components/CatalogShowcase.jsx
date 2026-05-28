@@ -1,15 +1,13 @@
 import { Link } from 'react-router-dom'
 
 const CatalogShowcase = ({ products }) => {
-  const featuredProducts = products.slice(0, 3)
-
-  if (featuredProducts.length === 0) {
+  if (products.length === 0) {
     return null
   }
 
   return (
     <div className='catalog-showcase'>
-      {featuredProducts.map((product, index) => (
+      {products.map((product, index) => (
         <Link
           to={`/product/${product._id}`}
           className={`catalog-showcase__card ${
