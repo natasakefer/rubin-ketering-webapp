@@ -12,6 +12,7 @@ import {
 } from 'react-router-dom'
 import HomeScreen from './screens/HomeScreen';
 import ProductScreen from './screens/ProductScreen';
+import ProductsScreen from './screens/ProductsScreen';
 import { Provider } from 'react-redux';
 import store from './store';
 import PrivateRoute from './components/PrivateRoute';
@@ -26,7 +27,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App/>}>
       <Route index={true} path="/" element={<HomeScreen/>} />
-      <Route path="/products" element={<HomeScreen/>} />
+      <Route path="/products" element={<ProductsScreen/>} />
       <Route path="/product/:id" element={<ProductScreen/>} />
       <Route path='/cart' element={<CartScreen />} />
       <Route path='/login' element={<LoginScreen />} />

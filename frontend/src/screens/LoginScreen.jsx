@@ -36,6 +36,9 @@ const LoginScreen = () => {
             const res = await login({ email, password }).unwrap();
             dispatch(setCredentials({ ...res }));
             navigate(redirect);
+            // Privremeni test bez bekenda:
+         //dispatch(setCredentials({ name: 'Nataša', email: 'test@test.com', isAdmin: false }));
+         //navigate(redirect);
         } catch (err) {
             toast.error(err?.data?.message || err.error);
         }

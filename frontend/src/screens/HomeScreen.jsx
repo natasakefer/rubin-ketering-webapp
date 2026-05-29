@@ -1,87 +1,130 @@
 import React from 'react'
-import { Row, Col } from 'react-bootstrap'
-import Product from '../components/Product'
-import Loader from '../components/Loader'
-import Message from '../components/Message'
-import CatalogHero from '../components/CatalogHero'
-import CatalogShowcase from '../components/CatalogShowcase'
-import { useGetProductsQuery } from '../slices/productApiSlice'
-import catalogProducts from '../products_list'
+import { Link } from 'react-router-dom'
 
-const normalizeCategory = (value = '') => value.trim().toLowerCase()
-
-const getProductKey = (product) => product._id || product.id
-
-const sectionConfig = [
+const categoryCards = [
   {
     title: 'Slano',
-    eyebrow: 'Slani program',
-    description:
-      'Mini pice, burgeri, hot dog zalogaji, pite i kiflice u urednom ketering izdanju.',
-    categories: ['slano'],
+    text: 'Mini pice, kiflice, kanapei i box pakovanja za proslave.',
+    image: '/images/IMG_0131.jpeg',
+    to: '/products#slano',
   },
   {
-    title: 'Dezerti',
-    eyebrow: 'Slatki program',
-    description:
-      'Krofnice, kolaci, rolat, bajadera, mafini i kremasti deserti za slatki sto.',
-    categories: ['dezerti', 'slatko'],
+    title: 'Slatko',
+    text: 'Krofnice, kolaci, casice i deserti za elegantan slatki sto.',
+    image: '/images/IMG_0331.jpeg',
+    to: '/products#slatko',
   },
 ]
 
-const CatalogSection = ({ config, products }) => {
-  const sectionProducts = products.filter((product) =>
-    config.categories.includes(normalizeCategory(product.category))
-  )
-  const showcaseProducts = sectionProducts.filter((product) => product.showcase)
-
-  return (
-    <section className='catalog-section'>
-      <div className='catalog-section__intro'>
-        <div>
-          <span className='section-eyebrow'>{config.eyebrow}</span>
-          <h2>{config.title}</h2>
-          <p>{config.description}</p>
-        </div>
-      </div>
-
-      <CatalogShowcase products={showcaseProducts} />
-
-      {sectionProducts.length > 0 ? (
-        <Row className='g-4'>
-          {sectionProducts.map((product) => (
-            <Col key={getProductKey(product)} sm={12} md={6} lg={4} xl={3}>
-              <Product product={product} />
-            </Col>
-          ))}
-        </Row>
-      ) : (
-        <Message>Trenutno nema proizvoda u ovoj kategoriji.</Message>
-      )}
-    </section>
-  )
-}
+const testimonials = [
+  {
+    text: 'Sve je stiglo uredno, lepo upakovano i spremno za serviranje. Gosti su prvo primetili izgled, pa tek onda ukus.',
+    author: 'Milica',
+  },
+  {
+    text: 'Odlican izbor za rodjendan. Slani boxevi su bili prakticni, a deserti su izgledali bas posebno na stolu.',
+    author: 'Jovana',
+  },
+  {
+    text: 'Profesionalna komunikacija i jako lep vizuelni utisak. Porudzbina je delovala pazljivo pripremljeno.',
+    author: 'Ana',
+  },
+]
 
 const HomeScreen = () => {
-  const { isLoading, error } = useGetProductsQuery()
-
   return (
-    <div className='catalog-page'>
-      <CatalogHero />
+    <div className='home-page'>
+      <section
+        className='home-hero'
+        style={{ '--home-hero-image': 'url(/images/prazneBox.jpg)' }}
+      >
+        <div className='home-hero__content'>
+          <span className='section-eyebrow'>Ketering za posebne trenutke</span>
+          <h1>Rubin Ketering</h1>
+          <p>
+            Elegantni slani zalogaji, deserti i box pakovanja za rođendane,
+            proslave i poslovne događaje.
+          </p>
+          <Link className='home-hero__cta' to='/products'>
+            Pogledaj cenovnik
+          </Link>
+        </div>
+      </section>
 
-      {isLoading ? (
-        <Loader />
-      ) : error ? (
-        <Message variant='danger'>{error?.data?.message || error.error}</Message>
-      ) : (
-        sectionConfig.map((config) => (
-          <CatalogSection
-            key={config.title}
-            config={config}
-            products={catalogProducts}
-          />
-        ))
-      )}
+      <section className='home-section'>
+        <div className='home-section__heading'>
+          <span className='section-eyebrow'>Izaberi program</span>
+          <h2>Slano ili slatko, sve je spremno za serviranje</h2>
+          <p>
+            Kategorije su organizovane tako da lako pronadjes boxeve, zalogaje
+            i dezerte za svoj događaj.
+          </p>
+        </div>
+
+        <div className='featured-categories'>
+          {categoryCards.map((category) => (
+            <Link
+              className='featured-category'
+              key={category.title}
+              style={{ '--category-image': `url(${category.image})` }}
+              to={category.to}
+            >
+              <div>
+                <span>{category.title}</span>
+                <p>{category.text}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className='home-about'>
+        <div className='home-about__copy'>
+          <span className='section-eyebrow'>O nama</span>
+          <h2>Ručno pripremljen ketering sa pažnjom na svaki detalj</h2>
+          <p>
+            Rubin Ketering pravi slane i slatke zalogaje za porodične proslave,
+            rodjendane, druženja i poslovne pauze. Fokus je na urednoj
+            prezentaciji, pouzdanoj pripremi i ukusu koji se lako uklapa u svaki
+            sto.
+          </p>
+        </div>
+
+        <div className='home-contact'>
+          <div>
+            <span>Lokacija</span>
+            <strong>Temerin, Srbija</strong>
+          </div>
+          <div>
+            <span>Adresa</span>
+            <strong>Nikole Pašića 123</strong>
+          </div>
+          <div>
+            <span>Telefon</span>
+            <strong>+381 62 487878</strong>
+          </div>
+          <div>
+            <span>Radno vreme</span>
+            <strong>Pon - Sub, 09:00 - 18:00</strong>
+          </div>
+        </div>
+      </section>
+
+      <section className='home-section home-section--testimonials'>
+        <div className='home-section__heading'>
+          <span className='section-eyebrow'>Utisci</span>
+          <h2>Mali detalji koji ostaju zapamćeni</h2>
+        </div>
+
+        <div className='testimonials'>
+          {testimonials.map((testimonial) => (
+            <article className='testimonial' key={testimonial.author}>
+              <p>"{testimonial.text}"</p>
+              <strong>{testimonial.author}</strong>
+            </article>
+          ))}
+        </div>
+      </section>
     </div>
   )
 }
