@@ -48,42 +48,94 @@ const RegisterScreen = () => {
         }
 
     };
+
     return (
-        <FormContainer>
-            <h1>Registrujte se</h1>
-            <Form onSubmit={submitHandler}>
-                <Form.Group controlId="name" className="my-3">
-                    <Form.Label>Ime</Form.Label>
-                    <Form.Control type="text" placeholder="Upišite ime" value={name} onChange={(e) => setName(e.target.value)}></Form.Control>
-                </Form.Group>
+        <div className="auth-page">
+            <FormContainer>
+                <div className="auth-card">
+                    <div
+                        className="auth-card__media"
+                        style={{ '--auth-image': 'url(/images/IMG_0331.jpeg)' }}
+                    >
+                        <div>
+                            <span>Rubin Ketering</span>
+                            <strong>Napravite nalog i porucujte omiljene slane i slatke boxeve.</strong>
+                        </div>
+                    </div>
 
-                <Form.Group controlId="email" className="my-3">
-                    <Form.Label>Email adresa</Form.Label>
-                    <Form.Control type="email" placeholder="Upišite email" value={email} onChange={(e) => setEmail(e.target.value)}></Form.Control>
-                </Form.Group>
+                    <div className="auth-card__content">
+                        <span className="section-eyebrow">Novi nalog</span>
+                        <h1>Registrujte se</h1>
+                        <p>
+                            Unesite osnovne podatke i pripremite nalog za brzu
+                            porudzbinu keteringa.
+                        </p>
 
-                <Form.Group controlId="password" className="my-3">
-                    <Form.Label>Lozinka</Form.Label>
-                    <Form.Control type="password" placeholder="Upišite lozinku" value={password} onChange={(e) => setPassword(e.target.value)} />
-                </Form.Group>
-                <Form.Group controlId="confirmPassword" className="my-3">
-                    <Form.Label>Potvrdite lozinku</Form.Label>
-                    <Form.Control type="password" placeholder="Potvrdite lozinku" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-                </Form.Group>
+                        <Form className="auth-form" onSubmit={submitHandler}>
+                            <Form.Group controlId="name">
+                                <Form.Label>Ime</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Vase ime"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                />
+                            </Form.Group>
 
-                <Button variant="primary" type="submit" className="mt-2" disabled={isLoading}>
-                    Registruj se
-                </Button>
+                            <Form.Group controlId="email">
+                                <Form.Label>Email adresa</Form.Label>
+                                <Form.Control
+                                    type="email"
+                                    placeholder="ime@email.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                            </Form.Group>
 
-                {isLoading && <Loader />}
-            </Form>
+                            <Form.Group controlId="password">
+                                <Form.Label>Lozinka</Form.Label>
+                                <Form.Control
+                                    type="password"
+                                    placeholder="Unesite lozinku"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+                            </Form.Group>
 
-            <Row className="py-3">
-                <Col>
-                    Imate nalog? <Link to={redirect ? `/login?redirect=${redirect}` : "/login"}>Prijavite se</Link>
-                </Col>
-            </Row>
-        </FormContainer>
+                            <Form.Group controlId="confirmPassword">
+                                <Form.Label>Potvrdite lozinku</Form.Label>
+                                <Form.Control
+                                    type="password"
+                                    placeholder="Ponovite lozinku"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                />
+                            </Form.Group>
+
+                            <Button
+                                className="auth-submit"
+                                variant="primary"
+                                type="submit"
+                                disabled={isLoading}
+                            >
+                                Registruj se
+                            </Button>
+
+                            {isLoading && <Loader />}
+                        </Form>
+
+                        <Row className="auth-switch">
+                            <Col>
+                                Imate nalog?{' '}
+                                <Link to={redirect ? `/login?redirect=${redirect}` : "/login"}>
+                                    Prijavite se
+                                </Link>
+                            </Col>
+                        </Row>
+                    </div>
+                </div>
+            </FormContainer>
+        </div>
     )
 }
 

@@ -10,6 +10,7 @@ import { toast } from "react-toastify"
 
 const LoginScreen = () => {
     const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -17,8 +18,6 @@ const LoginScreen = () => {
     const [login, { isLoading }] = useLoginMutation();
 
     const { userInfo } = useSelector((state) => state.auth);
-
-    const [password, setPassword] = useState('');
 
     const { search } = useLocation();
     const sp = new URLSearchParams(search);
@@ -36,40 +35,78 @@ const LoginScreen = () => {
             const res = await login({ email, password }).unwrap();
             dispatch(setCredentials({ ...res }));
             navigate(redirect);
-            // Privremeni test bez bekenda:
-         //dispatch(setCredentials({ name: 'Nataša', email: 'test@test.com', isAdmin: false }));
-         //navigate(redirect);
         } catch (err) {
             toast.error(err?.data?.message || err.error);
         }
     }
+
     return (
-        <FormContainer>
-            <h1>Prijavite se</h1>
-            <Form onSubmit={submitHandler}>
-                <Form.Group controlId="email" className="my-3">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control type="email" placeholder="Upisite email" value={email} onChange={(e) => setEmail(e.target.value)}></Form.Control>
-                </Form.Group>
+        <div className="auth-page">
+            <FormContainer>
+                <div className="auth-card">
+                    <div
+                        className="auth-card__media"
+                        style={{ '--auth-image': 'url(/images/IMG_0657.jpeg)' }}
+                    >
+                        <div>
+                            <span>Rubin Ketering</span>
+                            <strong>Porudzbine, omiljeni proizvodi i checkout na jednom mestu.</strong>
+                        </div>
+                    </div>
 
-                <Form.Group controlId="password" className="my-3">
-                    <Form.Label>Lozinka</Form.Label>
-                    <Form.Control type="password" placeholder="Upisite lozinku" value={password} onChange={(e) => setPassword(e.target.value)} />
-                </Form.Group>
+                    <div className="auth-card__content">
+                        <span className="section-eyebrow">Dobrodosli nazad</span>
+                        <h1>Prijavite se</h1>
+                        <p>
+                            Nastavite kupovinu, sacuvajte podatke za dostavu i brzo
+                            zavrsite porudzbinu.
+                        </p>
 
-                <Button variant="primary" type="submit" className="mt-2" disabled={isLoading}>
-                    Prijava
-                </Button>
+                        <Form className="auth-form" onSubmit={submitHandler}>
+                            <Form.Group controlId="email">
+                                <Form.Label>Email</Form.Label>
+                                <Form.Control
+                                    type="email"
+                                    placeholder="ime@email.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                            </Form.Group>
 
-                {isLoading && <Loader />}
-            </Form>
+                            <Form.Group controlId="password">
+                                <Form.Label>Lozinka</Form.Label>
+                                <Form.Control
+                                    type="password"
+                                    placeholder="Unesite lozinku"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+                            </Form.Group>
 
-            <Row className="py-3">
-                <Col>
-                    Nemate nalog? <Link to={redirect ? `/register?redirect=${redirect}` : "/register"}>Registrujte se</Link>
-                </Col>
-            </Row>
-        </FormContainer>
+                            <Button
+                                className="auth-submit"
+                                variant="primary"
+                                type="submit"
+                                disabled={isLoading}
+                            >
+                                Prijava
+                            </Button>
+
+                            {isLoading && <Loader />}
+                        </Form>
+
+                        <Row className="auth-switch">
+                            <Col>
+                                Nemate nalog?{' '}
+                                <Link to={redirect ? `/register?redirect=${redirect}` : "/register"}>
+                                    Registrujte se
+                                </Link>
+                            </Col>
+                        </Row>
+                    </div>
+                </div>
+            </FormContainer>
+        </div>
     )
 }
 
