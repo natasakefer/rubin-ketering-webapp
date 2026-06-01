@@ -21,7 +21,6 @@ const getProductUnit = (product) => {
 
   return 'kg'
 }
-
 const formatPrice = (price) =>
   new Intl.NumberFormat('sr-RS', {
     minimumFractionDigits: 0,

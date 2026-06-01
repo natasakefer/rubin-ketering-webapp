@@ -8,8 +8,8 @@ const CatalogHero = () => {
         <span className='section-eyebrow'>Rubin Ketering</span>
         <h1>Cenovnik</h1>
         <p>
-          Slani zalogaji, dezerti i box pakovanja za proslave, rodjendane i
-          poslovne dogadjaje.
+          Slani zalogaji, dezerti i box pakovanja za proslave, rođendane i
+          poslovne događaje.
         </p>
       </div>
     </section>

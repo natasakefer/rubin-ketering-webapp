@@ -50,6 +50,10 @@ const Header = () => {
 
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='ms-auto'>
+              <LinkContainer to='/'>
+                <Nav.Link>Početna</Nav.Link>
+              </LinkContainer>
+
               <LinkContainer to='/products'>
                 <Nav.Link>Cenovnik</Nav.Link>
               </LinkContainer>
