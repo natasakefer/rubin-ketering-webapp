@@ -46,6 +46,16 @@ const productSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        unit: {
+            type: String,
+            required: true,
+            default: "kg",
+        },
+        showcase: {
+            type: Boolean,
+            required: true,
+            default: false,
+        },
         price: {
             type: Number,
             required: true,

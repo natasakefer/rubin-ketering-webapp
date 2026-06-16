@@ -49,7 +49,7 @@ const CartScreen = () => {
         <div className='cart-empty'>
           <h2>Korpa je prazna</h2>
           <p>Dodaj omiljene slane zalogaje ili dezert boxove iz cenovnika.</p>
-          <Link className='btn btn-primary' to='/products'>
+          <Link className='add-to-cart-btn' to='/products'>
             Pogledaj cenovnik
           </Link>
         </div>

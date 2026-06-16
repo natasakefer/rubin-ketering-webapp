@@ -1,8 +1,12 @@
 import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { Form, Row, Col, Image, Button } from 'react-bootstrap'
-import { useDispatch } from 'react-redux'
-import { useGetProductDetailsQuery } from '../slices/productApiSlice'
+import { Form, Row, Col, Image, Button, ListGroup } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
+import {
+  useGetProductDetailsQuery,
+  useCreateReviewMutation,
+} from '../slices/productApiSlice'
 import Rating from '../components/Rating'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
@@ -30,19 +34,44 @@ const formatPrice = (price) =>
 const ProductScreen = () => {
   const { id: productId } = useParams()
   const [qty, setQty] = useState(1)
+  const [rating, setRating] = useState(0)
+  const [comment, setComment] = useState('')
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { userInfo } = useSelector((state) => state.auth)
 
   const {
     data: product,
+    refetch,
     isLoading,
     error,
   } = useGetProductDetailsQuery(productId)
 
+  const [createReview, { isLoading: loadingReview }] = useCreateReviewMutation()
+
   const addToCartHandler = () => {
     dispatch(addToCart({ ...product, qty }))
     navigate('/cart')
+  }
+
+  const submitReviewHandler = async (e) => {
+    e.preventDefault()
+
+    try {
+      await createReview({
+        productId,
+        rating,
+        comment,
+      }).unwrap()
+
+      setRating(0)
+      setComment('')
+      refetch()
+      toast.success('Recenzija je dodata')
+    } catch (err) {
+      toast.error(err?.data?.message || err.error)
+    }
   }
 
   if (isLoading) {
@@ -129,6 +158,75 @@ const ProductScreen = () => {
               Dodaj u korpu
             </Button>
           </section>
+        </Col>
+      </Row>
+
+      <Row className='mt-4'>
+        <Col md={7}>
+          <h2>Recenzije</h2>
+
+          {product.reviews.length === 0 && (
+            <Message>Jos uvek nema recenzija.</Message>
+          )}
+
+          <ListGroup variant='flush'>
+            {product.reviews.map((review) => (
+              <ListGroup.Item key={review._id}>
+                <strong>{review.name}</strong>
+                <Rating value={review.rating} />
+                <p>{review.createdAt.substring(0, 10)}</p>
+                <p>{review.comment}</p>
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        </Col>
+
+        <Col md={5}>
+          <h2>Ostavite recenziju</h2>
+
+          {loadingReview && <Loader />}
+
+          {userInfo ? (
+            <Form onSubmit={submitReviewHandler}>
+              <Form.Group controlId='rating' className='my-2'>
+                <Form.Label>Ocena</Form.Label>
+                <Form.Control
+                  as='select'
+                  value={rating}
+                  onChange={(e) => setRating(Number(e.target.value))}
+                >
+                  <option value=''>Izaberite ocenu</option>
+                  <option value='1'>1 - Lose</option>
+                  <option value='2'>2 - Moze bolje</option>
+                  <option value='3'>3 - Dobro</option>
+                  <option value='4'>4 - Vrlo dobro</option>
+                  <option value='5'>5 - Odlicno</option>
+                </Form.Control>
+              </Form.Group>
+
+              <Form.Group controlId='comment' className='my-2'>
+                <Form.Label>Komentar</Form.Label>
+                <Form.Control
+                  as='textarea'
+                  rows='3'
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                />
+              </Form.Group>
+
+              <Button
+                type='submit'
+                variant='primary'
+                disabled={loadingReview}
+              >
+                Posalji
+              </Button>
+            </Form>
+          ) : (
+            <Message>
+              Morate se prijaviti da biste ostavili recenziju.
+            </Message>
+          )}
         </Col>
       </Row>
     </div>

@@ -27,4 +27,106 @@ const getProductById = asyncHandler(async (req, res) => {
 });
 
 
-export { getProducts, getProductById };
+// @desc Create a new product
+// @route POST /api/products
+// @access Private/Admin
+const createProduct = asyncHandler(async (req, res) => { 
+    const product = new Product({
+            name: 'Test naziv', price: 0,
+            user: req.user._id,
+            image: '/images/sample.jpg', 
+            category: 'Test kategorija', 
+            countInStock: 0,
+            numReviews: 0, 
+            description: 'Test opis',
+            });
+
+        const createdProduct = await product.save(); 
+        res.status(201).json(createdProduct);
+});
+ 
+// @desc Update a product
+// @route PUT /api/products/:id
+// @access Private/Admin
+const updateProduct = asyncHandler(async (req, res) => {
+    const { name, price, description, image, category, unit, showcase, countInStock } = req.body; 
+    const product = await Product.findById(req.params.id);
+
+    if (product) {
+        product.name = name || product.name; 
+        product.price = price || product.price;
+        product.description = description || product.description; 
+        product.image = image || product.image;
+        product.category = category || product.category; 
+        product.unit = unit || product.unit;
+        product.showcase = showcase ?? product.showcase;
+        product.countInStock = countInStock || product.countInStock;
+
+        const updatedProduct = await product.save(); 
+        res.json(updatedProduct);
+    } else {
+        res.status(404);
+        throw new Error("Resource not found");
+    }
+  });
+
+
+// @desc Delete a product
+// @route DELETE /api/products/:id
+// @access Private/Admin
+const deleteProduct = asyncHandler(async (req, res) => { 
+    const product = await Product.findById(req.params.id);
+
+    if (product) {
+        await Product.deleteOne({ _id: product._id }); 
+        res.status(200).json({ message: "Product removed" });
+    } else {
+        res.status(404);
+        throw new Error("Resource not found");
+    }
+});
+
+// @desc Create a new product review
+// @route POST /api/products/:id/reviews
+// @access Private
+const createProductReview = asyncHandler(async (req, res) => {
+    const { rating, comment } = req.body;
+    const product = await Product.findById(req.params.id);
+
+    if (product) {
+        if (!rating || !comment) {
+            res.status(400);
+            throw new Error('Molimo unesite ocenu i komentar');
+        }
+
+        const alreadyReviewed = product.reviews.find(
+            (review) => review.user.toString() === req.user._id.toString()
+        );
+
+        if (alreadyReviewed) {
+            res.status(400);
+            throw new Error('Vec ste ocenili ovaj proizvod');
+        }
+
+        const review = {
+            name: req.user.name,
+            rating: Number(rating),
+            comment,
+            user: req.user._id,
+        };
+
+        product.reviews.push(review);
+        product.numReviews = product.reviews.length;
+        product.rating =
+            product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+            product.reviews.length;
+
+        await product.save();
+        res.status(201).json({ message: 'Recenzija je dodata' });
+    } else {
+        res.status(404);
+        throw new Error("Resource not found");
+    }
+});
+
+export { getProducts, getProductById, createProduct, updateProduct, deleteProduct, createProductReview};

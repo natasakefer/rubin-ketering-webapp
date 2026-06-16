@@ -7,7 +7,6 @@ import Message from '../components/Message'
 import CatalogHero from '../components/CatalogHero'
 import CatalogShowcase from '../components/CatalogShowcase'
 import { useGetProductsQuery } from '../slices/productApiSlice'
-import catalogProducts from '../products_list'
 
 const normalizeCategory = (value = '') => value.trim().toLowerCase()
 
@@ -66,7 +65,7 @@ const CatalogSection = ({ config, products }) => {
 }
 
 const ProductsScreen = () => {
-  const { isLoading, error } = useGetProductsQuery()
+  const { data: products = [], isLoading, error } = useGetProductsQuery()
   const { hash } = useLocation()
 
   useEffect(() => {
@@ -94,7 +93,7 @@ const ProductsScreen = () => {
           <CatalogSection
             key={config.title}
             config={config}
-            products={catalogProducts}
+            products={products}
           />
         ))
       )}

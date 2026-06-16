@@ -8,6 +8,11 @@ import { useRegisterMutation } from "../slices/usersApiSlice"
 import { setCredentials } from "../slices/authSlice"
 import { toast } from "react-toastify"
 
+const isStrongPassword = (value) =>
+    /^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/.test(value);
+
+const passwordMessage = 'Lozinka mora imati najmanje 8 karaktera, jedno veliko slovo i jedan specijalni karakter';
+
 const RegisterScreen = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -35,6 +40,10 @@ const RegisterScreen = () => {
         e.preventDefault();
         if (password !== confirmPassword) {
             toast.error('Lozinke se ne poklapaju');
+            return;
+        }
+        if (!isStrongPassword(password)) {
+            toast.error(passwordMessage);
             return;
         }
         else {

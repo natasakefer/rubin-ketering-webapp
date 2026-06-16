@@ -1,42 +1,61 @@
-import { PRODUCT_URL } from "../constants";
+import { PRODUCT_URL, UPLOAD_URL } from "../constants";
 import { apiSlice } from "./apiSlice";
-import fallbackProducts from "../products_list";
-
-const shouldUseFallbackProducts = () => process.env.NODE_ENV === 'development';
 
 
 export const productsApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getProducts: builder.query({
-            async queryFn(_arg, _queryApi, _extraOptions, baseQuery) {
-                const result = await baseQuery({ url: PRODUCT_URL });
-
-                if (result.error && shouldUseFallbackProducts()) {
-                    return { data: fallbackProducts };
-                }
-
-                return result;
-            },
+            query: () => ({
+                url: PRODUCT_URL,
+            }),
             keepUnusedDataFor: 5,
+            providesTags: ["Products"],
         }),
          getProductDetails: builder.query({
-            async queryFn(productId, _queryApi, _extraOptions, baseQuery) {
-                const result = await baseQuery({ url: `${PRODUCT_URL}/${productId}` });
-
-                if (result.error && shouldUseFallbackProducts()) {
-                    const product = fallbackProducts.find((item) => String(item._id) === String(productId));
-
-                    return product
-                        ? { data: product }
-                        : { error: { status: 404, data: { message: 'Product not found' } } };
-                }
-
-                return result;
-            },
+            query: (productId) => ({
+                url: `${PRODUCT_URL}/${productId}`,
+            }),
             keepUnusedDataFor: 5,
         }),
-
+        createProduct: builder.mutation({
+            query: () => ({
+                url: PRODUCT_URL,
+                method: "POST",
+            }),
+            invalidatesTags: ["Products"],
+        }),
+         updateProduct: builder.mutation({
+            query: (data) => ({
+                url: `${PRODUCT_URL}/${data.productId}`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: ["Products"],
+        }),
+        uploadProductImage: builder.mutation({
+            query: (data) => ({
+                url: `${UPLOAD_URL}`,
+                method: "POST",
+                body: data,
+            }),
+        }),
+        createReview: builder.mutation({
+            query: (data) => ({
+                url: `${PRODUCT_URL}/${data.productId}/reviews`,
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["Products"],
+        }),
+        deleteProduct: builder.mutation({
+            query: (productId) => ({
+                url: `${PRODUCT_URL}/${productId}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["Products"],
+        }),
     })
 });
 
-export const { useGetProductsQuery, useGetProductDetailsQuery  } = productsApiSlice;
+export const { useGetProductsQuery, useGetProductDetailsQuery, useCreateProductMutation,useUpdateProductMutation, 
+    useUploadProductImageMutation, useCreateReviewMutation, useDeleteProductMutation } = productsApiSlice;
