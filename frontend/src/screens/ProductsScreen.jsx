@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { Row, Col } from 'react-bootstrap'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Row, Col, Form } from 'react-bootstrap'
 import { useLocation } from 'react-router-dom'
 import Product from '../components/Product'
 import Loader from '../components/Loader'
@@ -12,68 +12,68 @@ const normalizeCategory = (value = '') => value.trim().toLowerCase()
 
 const getProductKey = (product) => product._id || product.id
 
-const sectionConfig = [
-  {
-    id: 'slano',
-    title: 'Slano',
-    eyebrow: 'Slani program',
-    description:
-      'Mini pice, burgeri, hot dog zalogaji, pite i kiflice u urednom ketering izdanju.',
-    categories: ['slano'],
-  },
-  {
-    id: 'slatko',
-    title: 'Dezerti',
-    eyebrow: 'Slatki program',
-    description:
-      'Krofnice, kolaci, rolat, bajadera, mafini i kremasti deserti za slatki sto.',
-    categories: ['dezerti', 'slatko'],
-  },
-]
+const categoryOptions = ['Sve', 'Slano', 'Dezerti']
 
-const CatalogSection = ({ config, products }) => {
-  const sectionProducts = products.filter((product) =>
-    config.categories.includes(normalizeCategory(product.category))
-  )
-  const showcaseProducts = sectionProducts.filter((product) => product.showcase)
+const categoryMatches = (product, activeCategory) => {
+  if (activeCategory === 'Sve') {
+    return true
+  }
 
-  return (
-    <section className='catalog-section' id={config.id}>
-      <div className='catalog-section__intro'>
-        <div>
-          <span className='section-eyebrow'>{config.eyebrow}</span>
-          <h2>{config.title}</h2>
-          <p>{config.description}</p>
-        </div>
-      </div>
+  const category = normalizeCategory(product.category)
 
-      <CatalogShowcase products={showcaseProducts} />
+  if (activeCategory === 'Dezerti') {
+    return ['dezerti', 'slatko'].includes(category)
+  }
 
-      {sectionProducts.length > 0 ? (
-        <Row className='g-4'>
-          {sectionProducts.map((product) => (
-            <Col key={getProductKey(product)} sm={12} md={6} lg={4} xl={3}>
-              <Product product={product} />
-            </Col>
-          ))}
-        </Row>
-      ) : (
-        <Message>Trenutno nema proizvoda u ovoj kategoriji.</Message>
-      )}
-    </section>
-  )
+  return category === normalizeCategory(activeCategory)
 }
 
 const ProductsScreen = () => {
   const { data: products = [], isLoading, error } = useGetProductsQuery()
   const { hash } = useLocation()
+  const [activeCategory, setActiveCategory] = useState('Sve')
+  const [searchText, setSearchText] = useState('')
+
+  const filteredProducts = useMemo(() => {
+    const normalizedSearch = searchText.trim().toLowerCase()
+
+    return products.filter((product) => {
+      const matchesCategory = categoryMatches(product, activeCategory)
+      const matchesSearch = product.name
+        .toLowerCase()
+        .includes(normalizedSearch)
+
+      return matchesCategory && matchesSearch
+    })
+  }, [activeCategory, products, searchText])
+
+  const showcaseProducts = useMemo(
+    () => filteredProducts.filter((product) => product.showcase),
+    [filteredProducts]
+  )
+
+  useEffect(() => {
+    if (!hash) {
+      return
+    }
+
+    const categoryFromHash = hash.replace('#', '').toLowerCase()
+
+    if (categoryFromHash === 'slano') {
+      setActiveCategory('Slano')
+    }
+
+    if (['dezerti', 'slatko'].includes(categoryFromHash)) {
+      setActiveCategory('Dezerti')
+    }
+  }, [hash])
 
   useEffect(() => {
     if (isLoading || !hash) {
       return
     }
 
-    const target = document.querySelector(hash)
+    const target = document.querySelector('#catalog-controls')
 
     if (target) {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -89,13 +89,73 @@ const ProductsScreen = () => {
       ) : error ? (
         <Message variant='danger'>{error?.data?.message || error.error}</Message>
       ) : (
-        sectionConfig.map((config) => (
-          <CatalogSection
-            key={config.title}
-            config={config}
-            products={products}
-          />
-        ))
+        <>
+          <section className='catalog-controls' id='catalog-controls'>
+            <div className='catalog-filter' aria-label='Filter kategorije'>
+              {categoryOptions.map((category) => (
+                <button
+                  key={category}
+                  type='button'
+                  className={`catalog-filter__button ${
+                    activeCategory === category ? 'active' : ''
+                  }`}
+                  onClick={() => setActiveCategory(category)}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+
+            <Form.Control
+              type='search'
+              className='catalog-search'
+              placeholder='Pretraga proizvoda'
+              aria-label='Pretraga proizvoda po nazivu'
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+          </section>
+
+          <section className='catalog-section catalog-section--showcase'>
+            <div className='catalog-section__intro'>
+              <span className='section-eyebrow'>Preporuka</span>
+              <h2>Izdvajamo iz ponude</h2>
+              <p>
+                Najtraženiji zalogaji iz naše ponude, filtrirani po kategoriji i
+                pretrazi koju ste odabrali.
+              </p>
+            </div>
+
+            {showcaseProducts.length > 0 ? (
+              <CatalogShowcase products={showcaseProducts} />
+            ) : (
+              <Message>Nema izdvojenih proizvoda za izabrani filter.</Message>
+            )}
+          </section>
+
+          <section className='catalog-section catalog-section--products'>
+            <div className='catalog-section__intro'>
+              <span className='section-eyebrow'>Cenovnik</span>
+              <h2>Glavna lista proizvoda</h2>
+              <p>
+                Pregledajte kompletnu ponudu prema aktivnoj kategoriji i tekstu
+                pretrage.
+              </p>
+            </div>
+
+            {filteredProducts.length > 0 ? (
+              <Row className='g-4'>
+                {filteredProducts.map((product) => (
+                  <Col key={getProductKey(product)} sm={12} md={6} lg={4} xl={3}>
+                    <Product product={product} />
+                  </Col>
+                ))}
+              </Row>
+            ) : (
+              <Message>Nema proizvoda za izabrani filter.</Message>
+            )}
+          </section>
+        </>
       )}
     </div>
   )
