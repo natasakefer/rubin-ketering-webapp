@@ -197,14 +197,17 @@ const OrderScreen = () => {
       Greška prilikom učitavanja porudžbine
     </Message>
   ) : (
-    <>
-      <h1>Porudžbina {order._id}</h1>
+    <div className='order-page'>
+      <div className='order-page__header'>
+        <span className='section-eyebrow'>Porudžbina</span>
+        <h1>Porudžbina {order._id}</h1>
+      </div>
 
-      <Row>
+      <Row className='g-4'>
 
         {/* LEVA STRANA */}
         <Col md={8}>
-          <ListGroup variant='flush'>
+          <ListGroup variant='flush' className='order-panel'>
 
             {/* ADRESA */}
             <ListGroup.Item>
@@ -217,7 +220,7 @@ const OrderScreen = () => {
 
               <p>
                 <strong>Email: </strong>
-                <a href={`mailto:${order.user.email}`}>
+                <a className='order-link' href={`mailto:${order.user.email}`}>
                   {order.user.email}
                 </a>
               </p>
@@ -289,6 +292,7 @@ const OrderScreen = () => {
 
                           <Col md={3}>
                             <Link
+                              className='order-link'
                               to={`/product/${item.product}`}
                             >
                               {item.name}
@@ -318,7 +322,7 @@ const OrderScreen = () => {
 
         {/* DESNA STRANA */}
         <Col md={4}>
-          <Card>
+          <Card className='order-summary'>
             <ListGroup variant='flush'>
 
               <ListGroup.Item>
@@ -366,10 +370,7 @@ const OrderScreen = () => {
                     <div>
                       <Button
                         onClick={onApproveTest}
-                        className='btn btn-block'
-                        style={{
-                          marginBottom: '10px',
-                        }}
+                        className='btn btn-block order-action'
                       >
                         Plati (test)
                       </Button>
@@ -393,7 +394,7 @@ const OrderScreen = () => {
                     {loadingDeliver && <Loader />}
 
                     <Button
-                      className='btn btn-block'
+                      className='btn btn-block order-action'
                       onClick={deliverOrderHandler}
                     >
                       Označi kao dostavljeno
@@ -406,7 +407,7 @@ const OrderScreen = () => {
         </Col>
 
       </Row>
-    </>
+    </div>
   );
 };
 

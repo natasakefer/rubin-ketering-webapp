@@ -44,36 +44,41 @@ const PlaceOrderScreen = () => {
     };
 
     return (
-        <>
+        <div className='checkout-preview'>
             <CheckoutSteps step1 step2 step3 step4 />
-            <Row>
+            <Row className='g-4'>
                 <Col md={8}>
-                    <ListGroup variant='flush'>
+                    <ListGroup variant='flush' className='checkout-panel'>
                         <ListGroup.Item>
                             <h2>Podaci za dostavu</h2>
                             <p>
-                                <strong>Adresa:</strong>
+                                <strong>Adresa:</strong>{' '}
                                 {cart.shippingAddress.address}, {cart.shippingAddress.city}{' '}
                                 {cart.shippingAddress.postalCode},{' '}
                                 {cart.shippingAddress.country}
                             </p>
+                            {cart.shippingAddress.phone && (
+                                <p>
+                                    <strong>Telefon:</strong> {cart.shippingAddress.phone}
+                                </p>
+                            )}
                         </ListGroup.Item>
 
                         <ListGroup.Item>
                             <h2>Način plaćanja</h2>
-                            {cart.paymentMethod}
+                            <p>{cart.paymentMethod}</p>
                         </ListGroup.Item>
 
                         <ListGroup.Item>
                             <h2>Stavke porudžbine</h2>
                             {cart.cartItems.length === 0 ? (
-                                <Message>Your cart is empty</Message>
+                                <Message variant='danger'>Korpa je prazna</Message>
                             ) : (
                                 <ListGroup variant='flush'>
                                     {cart.cartItems.map((item, index) => (
-                                        <ListGroup.Item key={index}>
-                                            <Row>
-                                                <Col md={1}>
+                                        <ListGroup.Item key={index} className='checkout-order-item'>
+                                            <Row className='align-items-center g-3'>
+                                                <Col xs={3} md={2}>
                                                     <Image
                                                         src={item.image}
                                                         alt={item.name}
@@ -82,11 +87,11 @@ const PlaceOrderScreen = () => {
                                                     />
                                                 </Col>
                                                 <Col>
-                                                    <Link to={`/product/${item.product}`} >
+                                                    <Link className='checkout-product-link' to={`/product/${item.product}`}>
                                                         {item.name}
                                                     </Link>
                                                 </Col>
-                                                <Col md={4}>
+                                                <Col md={4} className='checkout-line-price'>
                                                     {item.qty} x {item.price} RSD = {item.qty * item.price} RSD
                                                 </Col>
                                             </Row>
@@ -98,10 +103,10 @@ const PlaceOrderScreen = () => {
                     </ListGroup>
                 </Col>
                 <Col md={4}>
-                    <Card>
+                    <Card className='checkout-summary'>
                         <ListGroup variant='flush'>
                             <ListGroup.Item>
-                                <h2>Rezimiranje porudžbine</h2>
+                                <h2>Rezime porudžbine</h2>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Row>
@@ -111,20 +116,20 @@ const PlaceOrderScreen = () => {
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Row>
-                                    <Col>Shipping</Col>
+                                    <Col>Poštarina</Col>
                                     <Col>{cart.shippingPrice} RSD</Col>
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                 <Row>
-                                    <Col>Tax</Col>
+                                    <Col>PDV</Col>
                                     <Col>{cart.taxPrice} RSD</Col>
                                 </Row>
                             </ListGroup.Item>
-                            <ListGroup.Item>
+                            <ListGroup.Item className='checkout-summary__total'>
                                 <Row>
-                                    <Col>Total</Col>
-                                    <Col>${cart.totalPrice}</Col>
+                                    <Col>Ukupna cena</Col>
+                                    <Col>{cart.totalPrice} RSD</Col>
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
@@ -133,7 +138,7 @@ const PlaceOrderScreen = () => {
                             <ListGroup.Item>
                                 <Button
                                     type='button'
-                                    className='btn-block'
+                                    className='btn-block checkout-submit'
                                     disabled={cart.cartItems === 0}
                                     onClick={placeOrderHandler}
                                 >
@@ -145,7 +150,7 @@ const PlaceOrderScreen = () => {
                     </Card>
                 </Col>
             </Row>
-        </>
+        </div>
     );
 };
 

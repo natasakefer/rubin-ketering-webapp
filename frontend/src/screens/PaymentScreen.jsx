@@ -30,27 +30,43 @@ const PaymentScreen = () => {
     return (
         <FormContainer>
             <CheckoutSteps step1 step2 step3 />
-            <h1>Payment Method</h1>
-            <Form onSubmit={submitHandler}>
-                <Form.Group>
-                    <Form.Label as='legend'>Odaberite način plaćanja</Form.Label>
-                    <Col>
-                        <Form.Check
-                            type='radio'
-                            className='my-2'
-                            label='PayPal ili Kreditna kartica'
-                            id='PayPal'
-                            name='paymentMethod'
-                            value='PayPal'
-                            checked
-                            onChange={(e) => setPaymentMethod(e.target.value)}
-                        ></Form.Check>
-                    </Col>
-                </Form.Group>
-                <Button type='submit' variant='primary'>
-                    Nastavite
-                </Button>
-            </Form>
+            <div className='checkout-card'>
+                <div className='checkout-card__header'>
+                    <span className='section-eyebrow'>Plaćanje</span>
+                    <h1>Način plaćanja</h1>
+                    <p>Izaberite opciju koja vam najviše odgovara.</p>
+                </div>
+                <Form className='checkout-form' onSubmit={submitHandler}>
+                    <Form.Group>
+                        <Form.Label as='legend'>Odaberite način plaćanja</Form.Label>
+                        <Col className='payment-options'>
+                            <Form.Check
+                                type='radio'
+                                className='payment-option'
+                                label='PayPal ili kreditna kartica'
+                                id='PayPal'
+                                name='paymentMethod'
+                                value='PayPal'
+                                checked={paymentMethod === 'PayPal'}
+                                onChange={(e) => setPaymentMethod(e.target.value)}
+                            ></Form.Check>
+                            <Form.Check
+                                type='radio'
+                                className='payment-option'
+                                label='Plaćanje pouzećem'
+                                id='CashOnDelivery'
+                                name='paymentMethod'
+                                value='Plaćanje pouzećem'
+                                checked={paymentMethod === 'Plaćanje pouzećem'}
+                                onChange={(e) => setPaymentMethod(e.target.value)}
+                            ></Form.Check>
+                        </Col>
+                    </Form.Group>
+                    <Button type='submit' variant='primary' className='checkout-submit'>
+                        Nastavite
+                    </Button>
+                </Form>
+            </div>
         </FormContainer>
     )
 }
