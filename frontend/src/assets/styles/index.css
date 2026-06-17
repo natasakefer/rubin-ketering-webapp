@@ -1630,7 +1630,7 @@ table th {
   border-radius: 18px;
   display: flex;
   min-height: 58px;
-  padding: 0.85rem 1rem;
+  padding: 0.9rem 1.15rem 0.9rem 1.45rem;
   transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
 }
 
@@ -1813,13 +1813,13 @@ table th {
 }
 
 .payment-option.form-check {
-  padding-left: 1rem;
+  padding-left: 1.45rem;
 }
 
 .payment-option .form-check-input {
   float: none;
   flex: 0 0 auto;
-  margin: 0 0.7rem 0 0;
+  margin: 0 0.85rem 0 0;
 }
 
 .payment-option .form-check-label {
@@ -1929,6 +1929,276 @@ table th {
   margin-bottom: 0.85rem;
   min-height: 50px;
   width: 100%;
+}
+
+.admin-page {
+  padding: 0.25rem 0 1rem;
+}
+
+.admin-page__header {
+  margin-bottom: 1.35rem;
+}
+
+.admin-page__header h1 {
+  color: var(--rk-text);
+  font-size: clamp(2.25rem, 5vw, 4.2rem);
+  font-weight: 850;
+  line-height: 1;
+  margin-bottom: 0.65rem;
+}
+
+.admin-page__header p {
+  color: var(--rk-muted);
+  line-height: 1.7;
+  margin-bottom: 0;
+  max-width: 680px;
+}
+
+.admin-page__header--compact h1 {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+}
+
+.admin-primary-action,
+.admin-submit {
+  align-items: center;
+  border-radius: 999px;
+  display: inline-flex;
+  font-weight: 850;
+  gap: 0.5rem;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.68rem 1.1rem;
+}
+
+.admin-table-card,
+.admin-form-card {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--rk-border);
+  border-radius: 28px;
+  box-shadow: 0 22px 58px rgba(80, 9, 27, 0.11);
+  overflow: hidden;
+}
+
+.admin-table {
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+
+.admin-table thead th {
+  background: rgba(255, 212, 230, 0.45);
+  border-bottom: 1px solid var(--rk-border);
+  color: var(--rk-primary);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  padding: 0.95rem 1rem;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.admin-table tbody td {
+  border-color: var(--rk-border);
+  color: var(--rk-text);
+  font-weight: 650;
+  padding: 0.9rem 1rem;
+  text-align: left;
+}
+
+.admin-table tbody tr {
+  transition: background-color 180ms ease;
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(255, 253, 232, 0.72);
+}
+
+.admin-table__actions {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.admin-icon-btn,
+.admin-soft-btn {
+  align-items: center;
+  background: rgba(255, 212, 230, 0.55) !important;
+  border: 1px solid rgba(80, 9, 27, 0.12) !important;
+  color: var(--rk-primary) !important;
+  display: inline-flex;
+  font-weight: 850;
+  justify-content: center;
+}
+
+.admin-icon-btn {
+  border-radius: 999px;
+  height: 38px;
+  min-width: 38px;
+  padding: 0;
+}
+
+.admin-soft-btn {
+  border-radius: 999px;
+  min-height: 38px;
+  padding: 0.45rem 0.8rem;
+}
+
+.admin-icon-btn:hover,
+.admin-soft-btn:hover,
+.admin-icon-btn:focus,
+.admin-soft-btn:focus {
+  background: var(--rk-primary) !important;
+  border-color: var(--rk-primary) !important;
+  color: #fff !important;
+}
+
+.admin-icon-btn--danger {
+  background: rgba(80, 9, 27, 0.9) !important;
+  border-color: rgba(80, 9, 27, 0.9) !important;
+  color: #fff !important;
+}
+
+.admin-icon-btn--danger:hover,
+.admin-icon-btn--danger:focus {
+  background: var(--rk-primary-dark) !important;
+  border-color: var(--rk-primary-dark) !important;
+}
+
+.admin-icon-btn:disabled {
+  background: rgba(117, 102, 107, 0.16) !important;
+  border-color: rgba(117, 102, 107, 0.12) !important;
+  color: var(--rk-muted) !important;
+}
+
+.admin-link {
+  color: var(--rk-primary);
+  font-weight: 850;
+  text-decoration: none;
+}
+
+.admin-link:hover,
+.admin-link:focus {
+  color: var(--rk-primary-dark);
+  text-decoration: underline;
+  text-decoration-color: var(--rk-pink);
+  text-decoration-thickness: 0.18rem;
+  text-underline-offset: 0.22rem;
+}
+
+.admin-status {
+  align-items: center;
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 0.82rem;
+  font-weight: 900;
+  justify-content: center;
+  min-height: 30px;
+  min-width: 30px;
+  padding: 0.32rem 0.58rem;
+}
+
+.admin-status--success {
+  background: rgba(255, 212, 230, 0.66);
+  color: var(--rk-primary);
+}
+
+.admin-status--danger {
+  background: rgba(80, 9, 27, 0.1);
+  color: var(--rk-primary);
+}
+
+.admin-form-card {
+  padding: clamp(1.35rem, 4vw, 2.35rem);
+}
+
+.admin-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-form label {
+  color: var(--rk-text);
+  font-size: 0.88rem;
+  font-weight: 850;
+  margin-bottom: 0.38rem;
+}
+
+.admin-form .form-control {
+  background: rgba(255, 253, 232, 0.58);
+  border: 1px solid rgba(80, 9, 27, 0.14);
+  border-radius: 999px;
+  min-height: 50px;
+  padding: 0.72rem 1rem;
+}
+
+.admin-form .form-control:focus {
+  background: #fff;
+  border-color: rgba(80, 9, 27, 0.36);
+  box-shadow: 0 0 0 0.22rem rgba(255, 212, 230, 0.65);
+}
+
+.admin-file-input {
+  margin-top: 0.75rem;
+}
+
+.admin-check {
+  align-items: center;
+  background: rgba(255, 212, 230, 0.35);
+  border: 1px solid rgba(80, 9, 27, 0.1);
+  border-radius: 18px;
+  display: flex;
+  min-height: 56px;
+  padding: 0.85rem 1rem 0.85rem 1.25rem;
+}
+
+.admin-check .form-check {
+  align-items: center;
+  display: flex;
+  gap: 0.7rem;
+  margin-bottom: 0;
+  min-height: 0;
+  padding-left: 0;
+}
+
+.admin-check .form-check-input {
+  border-color: rgba(80, 9, 27, 0.42);
+  flex: 0 0 auto;
+  float: none;
+  margin: 0;
+}
+
+.admin-check .form-check-input:checked {
+  background-color: var(--rk-primary);
+  border-color: var(--rk-primary);
+}
+
+.admin-check .form-check-label {
+  cursor: pointer;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.admin-submit {
+  width: 100%;
+}
+
+.admin-back-link {
+  align-items: center;
+  background: rgba(255, 212, 230, 0.5);
+  border: 1px solid rgba(80, 9, 27, 0.12);
+  border-radius: 999px;
+  color: var(--rk-primary);
+  display: inline-flex;
+  font-weight: 850;
+  margin-bottom: 1rem;
+  min-height: 42px;
+  padding: 0.55rem 0.95rem;
+  text-decoration: none;
+}
+
+.admin-back-link:hover,
+.admin-back-link:focus {
+  background: var(--rk-primary);
+  color: #fff;
 }
 
 @media (max-width: 767.98px) {

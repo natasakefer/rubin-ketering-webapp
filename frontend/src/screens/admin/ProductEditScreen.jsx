@@ -127,159 +127,152 @@ const ProductEditScreen = () => {
   };
 
   return (
-    <>
-      {/* BACK BUTTON */}
+    <div className='admin-page'>
       <Link
         to='/admin/productlist'
-        className='btn btn-light my-3'
+        className='admin-back-link'
       >
         Nazad
       </Link>
 
       <FormContainer>
-        <h1>Izmena proizvoda</h1>
+        <div className='admin-form-card'>
+          <div className='admin-page__header admin-page__header--compact'>
+            <span className='section-eyebrow'>Admin panel</span>
+            <h1>Izmena proizvoda</h1>
+            <p>Ažurirajte naziv, cenu, sliku i detalje koji se prikazuju u katalogu.</p>
+          </div>
 
-        {loadingUpdate && <Loader />}
-        {loadingUpload && <Loader />}
+          {loadingUpdate && <Loader />}
+          {loadingUpload && <Loader />}
 
-        {isLoading ? (
-          <Loader />
-        ) : error ? (
-          <Message variant='danger'>
-            {error?.data?.message || error.error}
-          </Message>
-        ) : (
-          <Form onSubmit={submitHandler}>
+          {isLoading ? (
+            <Loader />
+          ) : error ? (
+            <Message variant='danger'>
+              {error?.data?.message || error.error}
+            </Message>
+          ) : (
+            <Form className='admin-form' onSubmit={submitHandler}>
+              <Form.Group controlId='name'>
+                <Form.Label>Naziv</Form.Label>
+                <Form.Control
+                  type='text'
+                  placeholder='Upišite naziv proizvoda'
+                  value={name}
+                  onChange={(e) =>
+                    setName(e.target.value)
+                  }
+                />
+              </Form.Group>
 
-            {/* NAME */}
-            <Form.Group controlId='name'>
-              <Form.Label>Naziv</Form.Label>
-              <Form.Control
-                type='text'
-                placeholder='Upišite naziv proizvoda'
-                value={name}
-                onChange={(e) =>
-                  setName(e.target.value)
-                }
-              />
-            </Form.Group>
+              <Form.Group controlId='price'>
+                <Form.Label>Cena</Form.Label>
+                <Form.Control
+                  type='number'
+                  placeholder='Upišite cenu proizvoda'
+                  value={price}
+                  onChange={(e) =>
+                    setPrice(e.target.value)
+                  }
+                />
+              </Form.Group>
 
-            {/* PRICE */}
-            <Form.Group controlId='price'>
-              <Form.Label>Cena</Form.Label>
-              <Form.Control
-                type='number'
-                placeholder='Upišite cenu proizvoda'
-                value={price}
-                onChange={(e) =>
-                  setPrice(e.target.value)
-                }
-              />
-            </Form.Group>
+              <Form.Group controlId='image'>
+                <Form.Label>Slika</Form.Label>
+                <Form.Control
+                  type='text'
+                  placeholder='URL slike proizvoda'
+                  value={image}
+                  onChange={(e) =>
+                    setImage(e.target.value)
+                  }
+                />
 
-            {/* IMAGE */}
-            <Form.Group
-              controlId='image'
-              className='my-2'
-            >
-              <Form.Label>Slika</Form.Label>
+                <FormControl
+                  className='admin-file-input'
+                  type='file'
+                  onChange={uploadFileHandler}
+                />
+              </Form.Group>
 
-              <Form.Control
-                type='text'
-                placeholder='URL slike proizvoda'
-                value={image}
-                onChange={(e) =>
-                  setImage(e.target.value)
-                }
-              />
+              <Form.Group controlId='countInStock'>
+                <Form.Label>
+                  Dostupna količina
+                </Form.Label>
 
-              <FormControl
-                type='file'
-                onChange={uploadFileHandler}
-              />
-            </Form.Group>
+                <Form.Control
+                  type='number'
+                  placeholder='Upišite dostupnu količinu'
+                  value={countInStock}
+                  onChange={(e) =>
+                    setCountInStock(e.target.value)
+                  }
+                />
+              </Form.Group>
 
-            {/* COUNT IN STOCK */}
-            <Form.Group controlId='countInStock'>
-              <Form.Label>
-                Dostupna količina
-              </Form.Label>
+              <Form.Group controlId='category'>
+                <Form.Label>Kategorija</Form.Label>
 
-              <Form.Control
-                type='number'
-                placeholder='Upišite dostupnu količinu'
-                value={countInStock}
-                onChange={(e) =>
-                  setCountInStock(e.target.value)
-                }
-              />
-            </Form.Group>
+                <Form.Control
+                  type='text'
+                  placeholder='Upišite kategoriju'
+                  value={category}
+                  onChange={(e) =>
+                    setCategory(e.target.value)
+                  }
+                />
+              </Form.Group>
 
-            {/* CATEGORY */}
-            <Form.Group controlId='category'>
-              <Form.Label>Kategorija</Form.Label>
+              <Form.Group controlId='unit'>
+                <Form.Label>Jedinica mere</Form.Label>
 
-              <Form.Control
-                type='text'
-                placeholder='Upišite kategoriju'
-                value={category}
-                onChange={(e) =>
-                  setCategory(e.target.value)
-                }
-              />
-            </Form.Group>
+                <Form.Control
+                  type='text'
+                  placeholder='kg ili kom'
+                  value={unit}
+                  onChange={(e) =>
+                    setUnit(e.target.value)
+                  }
+                />
+              </Form.Group>
 
-            <Form.Group controlId='unit'>
-              <Form.Label>Jedinica mere</Form.Label>
+              <Form.Group controlId='showcase' className='admin-check'>
+                <Form.Check
+                  type='checkbox'
+                  label='Prikaži u izdvojenom katalog delu'
+                  checked={showcase}
+                  onChange={(e) =>
+                    setShowcase(e.target.checked)
+                  }
+                />
+              </Form.Group>
 
-              <Form.Control
-                type='text'
-                placeholder='kg ili kom'
-                value={unit}
-                onChange={(e) =>
-                  setUnit(e.target.value)
-                }
-              />
-            </Form.Group>
+              <Form.Group controlId='description'>
+                <Form.Label>Opis</Form.Label>
 
-            <Form.Group controlId='showcase' className='my-2'>
-              <Form.Check
-                type='checkbox'
-                label='Prikazi u izdvojenom katalog delu'
-                checked={showcase}
-                onChange={(e) =>
-                  setShowcase(e.target.checked)
-                }
-              />
-            </Form.Group>
+                <Form.Control
+                  type='text'
+                  placeholder='Upišite opis proizvoda'
+                  value={description}
+                  onChange={(e) =>
+                    setDescription(e.target.value)
+                  }
+                />
+              </Form.Group>
 
-            {/* DESCRIPTION */}
-            <Form.Group controlId='description'>
-              <Form.Label>Opis</Form.Label>
-
-              <Form.Control
-                type='text'
-                placeholder='Upišite opis proizvoda'
-                value={description}
-                onChange={(e) =>
-                  setDescription(e.target.value)
-                }
-              />
-            </Form.Group>
-
-            {/* SUBMIT */}
-            <Button
-              type='submit'
-              variant='primary'
-              style={{ marginTop: '1rem' }}
-            >
-              Ažuriraj
-            </Button>
-
-          </Form>
-        )}
+              <Button
+                type='submit'
+                variant='primary'
+                className='admin-submit'
+              >
+                Ažuriraj
+              </Button>
+            </Form>
+          )}
+        </div>
       </FormContainer>
-    </>
+    </div>
   );
 };
 

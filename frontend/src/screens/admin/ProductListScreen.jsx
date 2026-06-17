@@ -85,30 +85,27 @@ const ProductListScreen = () => {
   };
 
   return (
-    <>
-      {/* HEADER */}
-      <Row className='align-items-center'>
-
+    <div className='admin-page'>
+      <Row className='admin-page__header align-items-center g-3'>
         <Col>
+          <span className='section-eyebrow'>Admin panel</span>
           <h1>Proizvodi</h1>
+          <p>Pregled, uređivanje i brzo dodavanje proizvoda iz cenovnika.</p>
         </Col>
 
-        <Col className='text-end'>
+        <Col md='auto' className='text-md-end'>
           <Button
-            className='btn-sm m-3'
+            className='admin-primary-action'
             onClick={createProductHandler}
           >
-            <FaPlus /> Kreirajte Novi Proizvod
+            <FaPlus /> Kreirajte novi proizvod
           </Button>
         </Col>
-
       </Row>
 
-      {/* LOADERS */}
       {loadingCreate && <Loader />}
       {loadingDelete && <Loader />}
 
-      {/* CONTENT */}
       {isLoading ? (
         <Loader />
       ) : error ? (
@@ -116,13 +113,11 @@ const ProductListScreen = () => {
           {error?.data?.message || error.error}
         </Message>
       ) : (
-        <>
+        <div className='admin-table-card'>
           <Table
-            striped
-            bordered
             hover
             responsive
-            className='table-sm'
+            className='admin-table table-sm'
           >
             <thead>
               <tr>
@@ -137,51 +132,39 @@ const ProductListScreen = () => {
             <tbody>
               {products?.map((product) => (
                 <tr key={product._id}>
-
                   <td>{product._id}</td>
-
                   <td>{product.name}</td>
-
                   <td>{product.price} RSD</td>
-
                   <td>{product.category}</td>
-
-                  {/* ACTIONS */}
-                  <td>
-
-                    {/* EDIT */}
+                  <td className='admin-table__actions'>
                     <LinkContainer
                       to={`/admin/product/${product._id}/edit`}
                     >
                       <Button
                         variant='light'
-                        className='btn-sm mx-2'
+                        className='admin-icon-btn'
                       >
                         <FaEdit />
                       </Button>
                     </LinkContainer>
 
-                    {/* DELETE */}
                     <Button
                       variant='danger'
-                      className='btn-sm'
+                      className='admin-icon-btn admin-icon-btn--danger'
                       onClick={() =>
                         deleteHandler(product._id)
                       }
                     >
-                      <FaTrash style={{ color: 'white' }} />
+                      <FaTrash />
                     </Button>
-
                   </td>
                 </tr>
               ))}
             </tbody>
           </Table>
-
-          {/* PAGINATION PLACEHOLDER */}
-        </>
+        </div>
       )}
-    </>
+    </div>
   );
 };
 
