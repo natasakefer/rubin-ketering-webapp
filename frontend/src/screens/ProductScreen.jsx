@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Form, Row, Col, Image, Button, ListGroup } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
+import { FaRegCommentDots, FaStar } from 'react-icons/fa'
 import {
   useGetProductDetailsQuery,
   useCreateReviewMutation,
@@ -25,6 +26,7 @@ const getProductUnit = (product) => {
 
   return 'kg'
 }
+
 const formatPrice = (price) =>
   new Intl.NumberFormat('sr-RS', {
     minimumFractionDigits: 0,
@@ -35,6 +37,7 @@ const ProductScreen = () => {
   const { id: productId } = useParams()
   const [qty, setQty] = useState(1)
   const [rating, setRating] = useState(0)
+  const [hoverRating, setHoverRating] = useState(0)
   const [comment, setComment] = useState('')
 
   const dispatch = useDispatch()
@@ -52,6 +55,10 @@ const ProductScreen = () => {
 
   const addToCartHandler = () => {
     dispatch(addToCart({ ...product, qty }))
+    toast.success('Proizvod je dodat u korpu', {
+      position: 'bottom-right',
+      autoClose: 2600,
+    })
     navigate('/cart')
   }
 
@@ -134,7 +141,7 @@ const ProductScreen = () => {
 
             {isAvailable && (
               <div className='product-detail__qty'>
-                <Form.Label>Kolicina</Form.Label>
+                <Form.Label>Količina</Form.Label>
                 <Form.Control
                   as='select'
                   value={qty}
@@ -161,74 +168,106 @@ const ProductScreen = () => {
         </Col>
       </Row>
 
-      <Row className='mt-4'>
-        <Col md={7}>
+      <section className='reviews-section'>
+        <div className='reviews-section__header'>
+          <span className='section-eyebrow'>Utisci</span>
           <h2>Recenzije</h2>
+          <p>Pogledajte iskustva kupaca ili podelite svoj utisak o proizvodu.</p>
+        </div>
 
-          {product.reviews.length === 0 && (
-            <Message>Jos uvek nema recenzija.</Message>
-          )}
+        <Row className='g-4'>
+          <Col lg={7}>
+            <div className='reviews-list-card'>
+              {product.reviews.length === 0 && (
+                <div className='reviews-empty'>
+                  <div className='reviews-empty__icon'>
+                    <FaRegCommentDots />
+                  </div>
+                  <h3>Još nema recenzija</h3>
+                  <p>Budite prvi koji će ostaviti utisak o ovom proizvodu.</p>
+                </div>
+              )}
 
-          <ListGroup variant='flush'>
-            {product.reviews.map((review) => (
-              <ListGroup.Item key={review._id}>
-                <strong>{review.name}</strong>
-                <Rating value={review.rating} />
-                <p>{review.createdAt.substring(0, 10)}</p>
-                <p>{review.comment}</p>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </Col>
+              <ListGroup variant='flush' className='reviews-list'>
+                {product.reviews.map((review) => (
+                  <ListGroup.Item key={review._id} className='review-card'>
+                    <div className='review-card__top'>
+                      <div>
+                        <strong>{review.name}</strong>
+                        <p>{review.createdAt.substring(0, 10)}</p>
+                      </div>
+                      <Rating value={review.rating} />
+                    </div>
+                    <p className='review-card__comment'>{review.comment}</p>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            </div>
+          </Col>
 
-        <Col md={5}>
-          <h2>Ostavite recenziju</h2>
+          <Col lg={5}>
+            <aside className='review-form-card'>
+              <div className='review-form-card__header'>
+                <span>Vaš utisak</span>
+                <h3>Ostavite recenziju</h3>
+              </div>
 
-          {loadingReview && <Loader />}
+              {loadingReview && <Loader />}
 
-          {userInfo ? (
-            <Form onSubmit={submitReviewHandler}>
-              <Form.Group controlId='rating' className='my-2'>
-                <Form.Label>Ocena</Form.Label>
-                <Form.Control
-                  as='select'
-                  value={rating}
-                  onChange={(e) => setRating(Number(e.target.value))}
-                >
-                  <option value=''>Izaberite ocenu</option>
-                  <option value='1'>1 - Lose</option>
-                  <option value='2'>2 - Moze bolje</option>
-                  <option value='3'>3 - Dobro</option>
-                  <option value='4'>4 - Vrlo dobro</option>
-                  <option value='5'>5 - Odlicno</option>
-                </Form.Control>
-              </Form.Group>
+              {userInfo ? (
+                <Form className='review-form' onSubmit={submitReviewHandler}>
+                  <Form.Group controlId='rating'>
+                    <Form.Label>Ocena</Form.Label>
+                    <div className='review-rating-picker' role='radiogroup' aria-label='Ocena proizvoda'>
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type='button'
+                          className={`review-rating-picker__star ${
+                            (hoverRating || rating) >= star ? 'active' : ''
+                          }`}
+                          aria-label={`${star} od 5`}
+                          aria-pressed={rating === star}
+                          onMouseEnter={() => setHoverRating(star)}
+                          onMouseLeave={() => setHoverRating(0)}
+                          onFocus={() => setHoverRating(star)}
+                          onBlur={() => setHoverRating(0)}
+                          onClick={() => setRating(star)}
+                        >
+                          <FaStar />
+                        </button>
+                      ))}
+                    </div>
+                  </Form.Group>
 
-              <Form.Group controlId='comment' className='my-2'>
-                <Form.Label>Komentar</Form.Label>
-                <Form.Control
-                  as='textarea'
-                  rows='3'
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                />
-              </Form.Group>
+                  <Form.Group controlId='comment'>
+                    <Form.Label>Komentar</Form.Label>
+                    <Form.Control
+                      as='textarea'
+                      rows='4'
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                    />
+                  </Form.Group>
 
-              <Button
-                type='submit'
-                variant='primary'
-                disabled={loadingReview}
-              >
-                Posalji
-              </Button>
-            </Form>
-          ) : (
-            <Message>
-              Morate se prijaviti da biste ostavili recenziju.
-            </Message>
-          )}
-        </Col>
-      </Row>
+                  <Button
+                    type='submit'
+                    variant='primary'
+                    className='review-submit'
+                    disabled={loadingReview}
+                  >
+                    Pošalji
+                  </Button>
+                </Form>
+              ) : (
+                <Message>
+                  Morate se prijaviti da biste ostavili recenziju.
+                </Message>
+              )}
+            </aside>
+          </Col>
+        </Row>
+      </section>
     </div>
   )
 }

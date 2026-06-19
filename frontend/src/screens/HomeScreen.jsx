@@ -22,11 +22,11 @@ const testimonials = [
     author: 'Milica',
   },
   {
-    text: 'Odlican izbor za rodjendan. Slani boxevi su bili prakticni, a deserti su izgledali bas posebno na stolu.',
+    text: 'Odličan izbor za rodjendan. Slani boxevi su bili praktični, a deserti su izgledali baš posebno na stolu.',
     author: 'Jovana',
   },
   {
-    text: 'Profesionalna komunikacija i jako lep vizuelni utisak. Porudzbina je delovala pazljivo pripremljeno.',
+    text: 'Profesionalna komunikacija i jako lep vizuelni utisak. Porudžbina je delovala pažljivo pripremljeno.',
     author: 'Ana',
   },
 ]
@@ -56,7 +56,7 @@ const HomeScreen = () => {
           <span className='section-eyebrow'>Izaberi program</span>
           <h2>Slano ili slatko, sve je spremno za serviranje</h2>
           <p>
-            Kategorije su organizovane tako da lako pronadjes boxeve, zalogaje
+            Kategorije su organizovane tako da lako pronađeš boxeve, zalogaje
             i dezerte za svoj događaj.
           </p>
         </div>

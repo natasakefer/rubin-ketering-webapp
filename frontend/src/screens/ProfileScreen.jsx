@@ -92,194 +92,178 @@ const ProfileScreen = () => {
   };
 
   return (
-    <Row>
+    <div className='profile-page'>
+      <div className='profile-page__header'>
+        <span className='section-eyebrow'>Moj nalog</span>
+        <h1>Profil korisnika</h1>
+        <p>Uredite svoje podatke i pratite istoriju porudžbina na jednom mestu.</p>
+      </div>
 
-      {/* LEVA STRANA - PROFIL */}
-      <Col md={3}>
-        <h2>Profil korisnika</h2>
+      <Row className='g-4 align-items-start'>
+        <Col lg={4}>
+          <section className='profile-card'>
+            <div className='profile-card__header'>
+              <span>Podaci</span>
+              <h2>Lični podaci</h2>
+            </div>
 
-        <Form onSubmit={submitHandler}>
+            <Form className='profile-form' onSubmit={submitHandler}>
+              <Form.Group controlId='name'>
+                <Form.Label>Ime</Form.Label>
+                <Form.Control
+                  type='text'
+                  placeholder='Unesite ime'
+                  value={name}
+                  onChange={(e) =>
+                    setName(e.target.value)
+                  }
+                />
+              </Form.Group>
 
-          {/* IME */}
-          <Form.Group
-            className='my-2'
-            controlId='name'
-          >
-            <Form.Label>Ime</Form.Label>
+              <Form.Group controlId='email'>
+                <Form.Label>Mejl adresa</Form.Label>
+                <Form.Control
+                  type='email'
+                  placeholder='Unesite mejl adresu'
+                  value={email}
+                  onChange={(e) =>
+                    setEmail(e.target.value)
+                  }
+                />
+              </Form.Group>
 
-            <Form.Control
-              type='text'
-              placeholder='Unesite ime'
-              value={name}
-              onChange={(e) =>
-                setName(e.target.value)
-              }
-            />
-          </Form.Group>
+              <Form.Group controlId='password'>
+                <Form.Label>Lozinka</Form.Label>
+                <Form.Control
+                  type='password'
+                  placeholder='Unesite lozinku'
+                  value={password}
+                  onChange={(e) =>
+                    setPassword(e.target.value)
+                  }
+                />
+              </Form.Group>
 
-          {/* EMAIL */}
-          <Form.Group
-            className='my-2'
-            controlId='email'
-          >
-            <Form.Label>Mejl adresa</Form.Label>
+              <Form.Group controlId='confirmPassword'>
+                <Form.Label>
+                  Potvrdite lozinku
+                </Form.Label>
+                <Form.Control
+                  type='password'
+                  placeholder='Potvrdite lozinku'
+                  value={confirmPassword}
+                  onChange={(e) =>
+                    setConfirmPassword(
+                      e.target.value
+                    )
+                  }
+                />
+              </Form.Group>
 
-            <Form.Control
-              type='email'
-              placeholder='Unesite mejl adresu'
-              value={email}
-              onChange={(e) =>
-                setEmail(e.target.value)
-              }
-            />
-          </Form.Group>
+              {loadingUpdateProfile && <Loader />}
 
-          {/* PASSWORD */}
-          <Form.Group
-            className='my-2'
-            controlId='password'
-          >
-            <Form.Label>Lozinka</Form.Label>
+              <Button
+                type='submit'
+                variant='primary'
+                className='profile-submit'
+              >
+                Ažurirajte profil
+              </Button>
+            </Form>
+          </section>
+        </Col>
 
-            <Form.Control
-              type='password'
-              placeholder='Unesite lozinku'
-              value={password}
-              onChange={(e) =>
-                setPassword(e.target.value)
-              }
-            />
-          </Form.Group>
+        <Col lg={8}>
+          <section className='profile-orders'>
+            <div className='profile-card__header'>
+              <span>Istorija</span>
+              <h2>Moje porudžbine</h2>
+            </div>
 
-          {/* CONFIRM PASSWORD */}
-          <Form.Group
-            className='my-2'
-            controlId='confirmPassword'
-          >
-            <Form.Label>
-              Potvrdite lozinku
-            </Form.Label>
+            {isLoading ? (
+              <Loader />
+            ) : error ? (
+              <Message variant='danger'>
+                {error?.data?.message || error.error}
+              </Message>
+            ) : (
+              <div className='profile-table-wrap'>
+                <Table
+                  hover
+                  responsive
+                  className='profile-table table-sm'
+                >
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Datum porudžbine</th>
+                      <th>Ukupna cena</th>
+                      <th>Status plaćanja</th>
+                      <th>Status dostave</th>
+                      <th></th>
+                    </tr>
+                  </thead>
 
-            <Form.Control
-              type='password'
-              placeholder='Potvrdite lozinku'
-              value={confirmPassword}
-              onChange={(e) =>
-                setConfirmPassword(
-                  e.target.value
-                )
-              }
-            />
-          </Form.Group>
-
-          {/* LOADER */}
-          {loadingUpdateProfile && <Loader />}
-
-          {/* BUTTON */}
-          <Button
-            type='submit'
-            variant='primary'
-            className='mt-2'
-          >
-            Ažurirajte profil
-          </Button>
-
-        </Form>
-      </Col>
-
-      {/* DESNA STRANA - PORUDŽBINE */}
-      <Col md={9}>
-        <h2>Moje porudžbine</h2>
-
-        {isLoading ? (
-          <Loader />
-        ) : error ? (
-          <Message variant='danger'>
-            {error?.data?.message || error.error}
-          </Message>
-        ) : (
-          <Table
-            striped
-            hover
-            responsive
-            className='table-sm'
-          >
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Datum porudžbine</th>
-                <th>Ukupna cena</th>
-                <th>Status plaćanja</th>
-                <th>Status dostave</th>
-                <th></th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {orders.map((order) => (
-                <tr key={order._id}>
-
-                  <td>{order._id}</td>
-
-                  <td>
-                    {order.createdAt.substring(
-                      0,
-                      10
-                    )}
-                  </td>
-
-                  <td>
-                    {order.totalPrice} RSD
-                  </td>
-
-                  {/* PLAĆANJE */}
-                  <td>
-                    {order.isPaid ? (
-                      order.paidAt.substring(0, 10)
-                    ) : (
-                      <FaTimes
-                        style={{ color: 'red' }}
-                      />
-                    )}
-                  </td>
-
-                  {/* DOSTAVA */}
-                  <td>
-                    {order.isDelivered ? (
-                      order.deliveredAt.substring(
-                        0,
-                        10
-                      )
-                    ) : (
-                      <FaTimes
-                        style={{ color: 'red' }}
-                      />
-                    )}
-                  </td>
-
-                  {/* DETALJI */}
-                  <td>
-                    <LinkContainer
-                      to={`/order/${order._id}`}
-                    >
-                      <Button
-                        variant='light'
-                        className='btn-sm'
-                      >
-                        Detalji
-                      </Button>
-                    </LinkContainer>
-                  </td>
-
-                </tr>
-              ))}
-            </tbody>
-
-          </Table>
-        )}
-      </Col>
-
-    </Row>
+                  <tbody>
+                    {orders.map((order) => (
+                      <tr key={order._id}>
+                        <td>{order._id}</td>
+                        <td>
+                          {order.createdAt.substring(
+                            0,
+                            10
+                          )}
+                        </td>
+                        <td>
+                          {order.totalPrice} RSD
+                        </td>
+                        <td>
+                          {order.isPaid ? (
+                            <span className='profile-status profile-status--success'>
+                              {order.paidAt.substring(0, 10)}
+                            </span>
+                          ) : (
+                            <span className='profile-status profile-status--muted'>
+                              <FaTimes />
+                            </span>
+                          )}
+                        </td>
+                        <td>
+                          {order.isDelivered ? (
+                            <span className='profile-status profile-status--success'>
+                              {order.deliveredAt.substring(
+                                0,
+                                10
+                              )}
+                            </span>
+                          ) : (
+                            <span className='profile-status profile-status--muted'>
+                              <FaTimes />
+                            </span>
+                          )}
+                        </td>
+                        <td>
+                          <LinkContainer
+                            to={`/order/${order._id}`}
+                          >
+                            <Button
+                              variant='light'
+                              className='profile-soft-btn'
+                            >
+                              Detalji
+                            </Button>
+                          </LinkContainer>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
+            )}
+          </section>
+        </Col>
+      </Row>
+    </div>
   );
 };
 

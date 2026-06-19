@@ -42,7 +42,7 @@ const CartScreen = () => {
       <div className='cart-page__header'>
         <span className='section-eyebrow'>Tvoja porudzbina</span>
         <h1>Korpa</h1>
-        <p>Pregledaj proizvode, prilagodi kolicine i nastavi na checkout.</p>
+        <p>Pregledaj proizvode, prilagodi količine i nastavi na checkout.</p>
       </div>
 
       {cartItems.length === 0 ? (
@@ -120,7 +120,7 @@ const CartScreen = () => {
               </div>
 
               <p>
-                Dostava i nacin placanja se biraju u sledecem koraku.
+                Dostava i način plaćanja se biraju u sledećem koraku.
               </p>
 
               <Button
