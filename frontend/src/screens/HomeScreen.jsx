@@ -10,7 +10,7 @@ const categoryCards = [
   },
   {
     title: 'Slatko',
-    text: 'Krofnice, kolaci, casice i deserti za elegantan slatki sto.',
+    text: 'Krofnice, kolači, čašice i deserti za elegantan slatki sto.',
     image: '/images/IMG_0331.jpeg',
     to: '/products#slatko',
   },

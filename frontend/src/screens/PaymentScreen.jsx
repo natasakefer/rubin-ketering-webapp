@@ -39,27 +39,36 @@ const PaymentScreen = () => {
                 <Form className='checkout-form' onSubmit={submitHandler}>
                     <Form.Group>
                         <Form.Label as='legend'>Odaberite način plaćanja</Form.Label>
-                        <Col className='payment-options'>
-                            <Form.Check
-                                type='radio'
-                                className='payment-option'
-                                label='PayPal ili kreditna kartica'
-                                id='PayPal'
-                                name='paymentMethod'
-                                value='PayPal'
-                                checked={paymentMethod === 'PayPal'}
-                                onChange={(e) => setPaymentMethod(e.target.value)}
-                            ></Form.Check>
-                            <Form.Check
-                                type='radio'
-                                className='payment-option'
-                                label='Plaćanje pouzećem'
-                                id='CashOnDelivery'
-                                name='paymentMethod'
-                                value='Plaćanje pouzećem'
-                                checked={paymentMethod === 'Plaćanje pouzećem'}
-                                onChange={(e) => setPaymentMethod(e.target.value)}
-                            ></Form.Check>
+                        <Col className='payment-options payment-options--cards'>
+                            <button
+                                type='button'
+                                className={`payment-card ${
+                                    paymentMethod === 'PayPal' ? 'active' : ''
+                                }`}
+                                aria-pressed={paymentMethod === 'PayPal'}
+                                onClick={() => setPaymentMethod('PayPal')}
+                            >
+                                <span className='payment-card__check'></span>
+                                <span>
+                                    <strong>PayPal ili kreditna kartica</strong>
+                                    <small>Online test plaćanje putem kartice ili PayPal naloga.</small>
+                                </span>
+                            </button>
+
+                            <button
+                                type='button'
+                                className={`payment-card ${
+                                    paymentMethod === 'Plaćanje pouzećem' ? 'active' : ''
+                                }`}
+                                aria-pressed={paymentMethod === 'Plaćanje pouzećem'}
+                                onClick={() => setPaymentMethod('Plaćanje pouzećem')}
+                            >
+                                <span className='payment-card__check'></span>
+                                <span>
+                                    <strong>Plaćanje pouzećem</strong>
+                                    <small>Platite prilikom preuzimanja ili dostave porudžbine.</small>
+                                </span>
+                            </button>
                         </Col>
                     </Form.Group>
                     <Button type='submit' variant='primary' className='checkout-submit'>
